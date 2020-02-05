@@ -1,4 +1,5 @@
-﻿using ToyLanguage.Interfaces;
+﻿using System;
+using ToyLanguage.Interfaces;
 using ToyLanguage.Parser.Expressions;
 
 namespace ToyLanguage.Utils
@@ -27,7 +28,10 @@ namespace ToyLanguage.Utils
 
         public string VisitGroupingExpression(Grouping expression) => throw new System.NotImplementedException();
 
-        public string VisitLiteralExpression(Literal expression) => throw new System.NotImplementedException();
+        [Obsolete]
+        //rever o tipo do Value, nao sei se é object.
+        public string VisitLiteralExpression(Literal expression) =>
+            expression.Value == null ? "nil" : expression.Value.ToString();
 
         #region trash
 
