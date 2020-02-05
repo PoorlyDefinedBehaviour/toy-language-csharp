@@ -11,8 +11,9 @@ namespace Parser.Statements
       this.statements = statements;
     }
 
-    public void accept(StatementVisitor visitor)
+    public dynamic accept(StatementVisitor visitor)
     {
-      visitor.visitBlockStatement(this);
+      return visitor.visitBlockStatement(this);
     }
   }
+}
