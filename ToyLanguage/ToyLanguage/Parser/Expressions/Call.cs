@@ -1,14 +1,25 @@
-﻿using ToyLanguage.Interfaces;
+﻿using System.Collections.Generic;
+
+using ToyLanguage.Interfaces;
 using ToyLanguage.Lexer;
 
 namespace ToyLanguage.Parser.Expressions
 {
-    internal class Call : IExpression
-    {
-        public IExpression Callee { get; set; }
-        public Token Parentheses { get; set; }
-        public IExpression[] Args { get; set; }
+  internal class Call : IExpression
+  {
+    public IExpression Callee { get; }
+    public Token Parentheses { get; }
+    public List<IExpression> Args { get; }
 
-        public T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitCallExpression(this);
+    public Call(IExpression callee,
+                Token parentheses,
+                List<IExpression> args)
+    {
+      Callee = callee;
+      Parentheses = parentheses;
+      Args = args;
     }
+
+    public T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitCallExpression(this);
+  }
 }

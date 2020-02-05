@@ -5,12 +5,15 @@ using ToyLanguage.Lexer;
 
 namespace ToyLanguage.Parser.Expressions
 {
-    internal class Super : IExpression
+  internal class Super : IExpression
+  {
+    public Token Name { get; }
+
+    public Super(Token name)
     {
-        public Token Name { get; }
-
-        public Super(Token name) => Name = name;
-
-        public T Accept<T>(IExpressionVisitor<T> visitor) => throw new NotImplementedException();
+      Name = name;
     }
+
+    public T Accept<T>(IExpressionVisitor<T> visitor) => throw new NotImplementedException();
+  }
 }

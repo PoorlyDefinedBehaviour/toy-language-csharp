@@ -6,21 +6,21 @@ using ToyLanguage.Parser.Expressions;
 
 namespace ToyLanguage.Parser.Statements
 {
-    internal class Class : IStatement
+  internal class Class : IStatement
+  {
+    public Token Name { get; }
+    public Variable Superclass { get; }
+    public List<Function> Methods { get; }
+    public List<Function> StaticMethods { get; }
+
+    public Class(Token name, Variable superclass, List<Function> methods, List<Function> staticMethods)
     {
-        public Token Name { get; }
-        public Variable Superclass { get; }
-        public List<Function> Methods { get; }
-        public List<Function> StaticMethods { get; }
-
-        public Class(Token name, Variable superclass, List<Function> methods, List<Function> staticMethods)
-        {
-            Name = name;
-            Superclass = superclass;
-            Methods = methods;
-            StaticMethods = staticMethods;
-        }
-
-        public T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitClassStatement(this);
+      Name = name;
+      Superclass = superclass;
+      Methods = methods;
+      StaticMethods = staticMethods;
     }
+
+    public T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitClassStatement(this);
+  }
 }

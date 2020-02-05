@@ -3,12 +3,15 @@ using ToyLanguage.Lexer;
 
 namespace ToyLanguage.Parser.Expressions
 {
-    internal class Variable : IExpression
+  internal class Variable : IExpression
+  {
+    public Token Name { get; }
+
+    public Variable(Token name)
     {
-        public Token Name { get; }
-
-        public Variable(Token name) => Name = name;
-
-        public T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitVariableExpression(this);
+      Name = name;
     }
+
+    public T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitVariableExpression(this);
+  }
 }
