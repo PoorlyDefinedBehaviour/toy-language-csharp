@@ -5,7 +5,7 @@ class Program
 {
   static void Main(string[] args)
   {
-    var lexer = new Tokenizer("let a = 10");
+    var tokenizer = new Tokenizer("let a = 10");
     Console.WriteLine("hello world");
   }
 }

@@ -10,12 +10,10 @@ namespace Parser.Statements
     public readonly List<Function> methods;
     public readonly List<Function> staticMethods;
 
-    public Class(
-       Token name,
-       Variable? superclass,
-       List<Function> methods,
-       List<Function> staticMethods
-    )
+    public Class(Token name,
+                 Variable? superclass,
+                 List<Function> methods,
+                 List<Function> staticMethods)
     {
       this.name = name;
       this.superclass = superclass;

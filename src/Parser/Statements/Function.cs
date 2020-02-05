@@ -9,11 +9,9 @@ namespace Parser.Statements
     public readonly List<Token> parameters;
     public readonly List<Statement> body;
 
-    public Function(
-      Token name,
-      List<Token> parameters,
-      List<Statement> body
-      )
+    public Function(Token name,
+                    List<Token> parameters,
+                    List<Statement> body)
     {
       this.name = name;
       this.parameters = parameters;
