@@ -23,13 +23,11 @@ namespace ToyLanguage.Resolver
     {
         private ScopeTypes currentScopeType = ScopeTypes.NONE;
 
-        // TODO
+        // TODO and remove [Obsolete]
         // constructor(private interpreter: Interpreter) {}
 
-        //private scopes: Map<string, boolean>[] = [];
         private readonly Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
 
-        //private beginScope() : void { this.scopes.push(new Map<string, boolean>());}
         private void BeginScope() => scopes.Push(new Dictionary<string, bool>());
 
         private void EndScope() => scopes.Pop();
@@ -86,11 +84,19 @@ namespace ToyLanguage.Resolver
                 Declare(param);
                 Define(param);
             });
+
             statement.Body.ForEach(stmt => stmt.Accept(this));
 
             EndScope();
 
             currentScopeType = parentScopeType;
+        }
+
+        public Resolver Resolve(IStatement[] statements)
+        {
+            statements.ToList().ForEach(statement => statement.Accept(this));
+
+            return this;
         }
 
         public object VisitBlockStatement(Block statement)
@@ -154,45 +160,175 @@ namespace ToyLanguage.Resolver
             return null;
         }
 
-        public object VisitExpressionStatement(IExpression statement)
+        public object VisitExpressionStatement(Expression statement)
         {
-            statement.expression.accept(this);
+            statement.CurrentExpression.Accept(this);
 
             return null;
         }
 
-        #region trash
+        public object VisitIfStatement(If statement)
+        {
+            statement.Condition.Accept(this);
+            statement.ThenBranch.Accept(this);
 
-        public object VisitAccessObjectPropertyExpression(AccessObjectProperty expression) => throw new NotImplementedException();
+            if (statement.ElseBranch != null)
+            {
+                statement.ElseBranch.Accept(this);
+            }
 
-        public object VisitBinaryExpression(Binary expression) => throw new NotImplementedException();
+            return null;
+        }
 
-        public object VisitCallExpression(Call expression) => throw new NotImplementedException();
+        public object VisitPrintStatement(Print statement)
+        {
+            statement.Expression.Accept(this);
 
-        public object VisitClassStatement(Class statement) => throw new NotImplementedException();
+            return null;
+        }
 
-        public object VisitGroupingExpression(Grouping expression) => throw new NotImplementedException();
+        public object VisitReturnStatement(Return statement)
+        {
+            if (currentScopeType == ScopeTypes.NONE)
+                throw new UnexpectedTokenException(statement.Keyword.Lexeme);
 
-        public object VisitIfStatement(If statement) => throw new NotImplementedException();
+            if (currentScopeType == ScopeTypes.CLASS_CONSTRUCTOR)
+                Console.WriteLine("Invalid <return> statement from class constructor");
+
+            if (statement.Value != null)
+                statement.Value.Accept(this);
+
+            return null;
+        }
+
+        public object VisitWhileStatement(While statement)
+        {
+            statement.Condition.Accept(this);
+            statement.Body.Accept(this);
+
+            return null;
+        }
+
+        public object VisitClassStatement(Class statement)
+        {
+            ScopeTypes parentScopeType = currentScopeType;
+            currentScopeType = ScopeTypes.METHOD;
+
+            if (statement.Name.Lexeme == "constructor")
+                currentScopeType = ScopeTypes.CLASS_CONSTRUCTOR;
+
+            Define(statement.Name);
+            Declare(statement.Name);
+
+            BeginScope();
+
+            Dictionary<string, bool> currentScope = GetCurrentScope();
+            currentScope["this"] = true;
+
+            if (statement.Superclass != null)
+            {
+                currentScope["super"] = true;
+                currentScopeType = ScopeTypes.SUB_CLASS_METHOD;
+
+                string className = statement.Name.Lexeme;
+
+                string superClassName = statement.Superclass.Name.Lexeme;
+
+                if (className == superClassName)
+                    Console.WriteLine($"Class { className} can't extend {superClassName}");
+
+                statement.Superclass.Accept(this);
+            }
+
+            statement.Methods.ForEach(method => ResolveFunction(method, currentScopeType));
+
+            EndScope();
+
+            currentScopeType = parentScopeType;
+
+            return null;
+        }
+
+        public object VisitBinaryExpression(Binary expression)
+        {
+            expression.Left.Accept(this);
+            expression.Right.Accept(this);
+
+            return null;
+        }
+
+        public object VisitCallExpression(Call expression)
+        {
+            expression.Callee.Accept(this);
+
+            expression.Args.ForEach(arg => arg.Accept(this));
+
+            return null;
+        }
+
+        public object VisitAccessObjectPropertyExpression(AccessObjectProperty expression)
+        {
+            expression.Object.Accept(this);
+
+            return null;
+        }
+
+        public object VisitGroupingExpression(Grouping expression)
+        {
+            expression.Expression.Accept(this);
+
+            return null;
+        }
+
+        public object VisitLogicalExpression(Logical expression)
+        {
+            expression.Left.Accept(this);
+            expression.Right.Accept(this);
+
+            return null;
+        }
+
+        public object VisitSetObjectPropertyExpression(SetObjectProperty expression)
+        {
+            expression.Value.Accept(this);
+            expression.Object.Accept(this);
+
+            return null;
+        }
+
+        [Obsolete]
+        public object VisitThisExpression(This expression)
+        {
+            if (currentScopeType != ScopeTypes.METHOD && currentScopeType != ScopeTypes.SUB_CLASS_METHOD)
+            {
+                Console.WriteLine("Invalid use of <this> outside of class instance");
+                return null;
+            }
+            ResolveLocal(expression, expression.Name);
+
+            return null;
+        }
+
+        [Obsolete]
+        public object VisitSuperExpression(Super expression)
+        {
+            if (currentScopeType != ScopeTypes.SUB_CLASS_METHOD)
+            {
+                Console.WriteLine("Invalid use of <super> outside of class sub class instance");
+                return null;
+            }
+            ResolveLocal(expression, expression.Name);
+
+            return null;
+        }
+
+        public object VisitUnaryExpression(Unary expression)
+        {
+            expression.Right.Accept(this);
+
+            return null;
+        }
 
         public object VisitLiteralExpression(Literal expression) => throw new NotImplementedException();
-
-        public object VisitLogicalExpression(Logical expression) => throw new NotImplementedException();
-
-        public object VisitPrintStatement(Print statement) => throw new NotImplementedException();
-
-        public object VisitReturnStatement(Return statement) => throw new NotImplementedException();
-
-        public object VisitSetObjectPropertyExpression(SetObjectProperty expression) => throw new NotImplementedException();
-
-        public object VisitSuperExpression(Super expression) => throw new NotImplementedException();
-
-        public object VisitThisExpression(This expression) => throw new NotImplementedException();
-
-        public object VisitUnaryExpression(Unary expression) => throw new NotImplementedException();
-
-        public object VisitWhileStatement(While statement) => throw new NotImplementedException();
-
-        #endregion trash
     }
 }

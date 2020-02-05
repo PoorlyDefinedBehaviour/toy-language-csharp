@@ -2,15 +2,12 @@ using ToyLanguage.Interfaces;
 
 namespace ToyLanguage.Parser.Statements
 {
-  internal class Expression : IStatement
-  {
-    public IExpression _Expression { get; }
-
-    public Expression(IExpression expression)
+    internal class Expression : IStatement
     {
-      _Expression = expression;
-    }
+        public IExpression CurrentExpression { get; }
 
-    public T Accept<T>(IStatementVisitor<T> visitor) => visitor.visitExpressionStatement(this);
-  }
+        public Expression(IExpression expression) => CurrentExpression = expression;
+
+        public T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitExpressionStatement(this);
+    }
 }
