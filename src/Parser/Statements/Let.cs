@@ -7,7 +7,7 @@ namespace Parser.Statements
     public readonly Token name;
     public readonly Expression? initializer;
 
-    public Let(Token name, Expression initializer)
+    public Let(Token name, Expression? initializer)
     {
       this.name = name;
       this.initializer = initializer;
