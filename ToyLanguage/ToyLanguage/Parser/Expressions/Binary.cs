@@ -16,6 +16,6 @@ namespace ToyLanguage.Parser.Expressions
             Right = right;
         }
 
-        public T Accept<T>(IExpressionVisitor visitor) => visitor.VisitBinaryExpression(this);
+        public T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitBinaryExpression(this);
     }
 }

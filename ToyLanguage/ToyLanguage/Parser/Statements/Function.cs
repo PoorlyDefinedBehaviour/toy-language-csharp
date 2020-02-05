@@ -18,6 +18,6 @@ namespace ToyLanguage.Parser.Statements
             Body = body;
         }
 
-        public T Accept<T>(IStatementVisitor visitor) => visitor.VisitFunctionStatement(this);
+        public T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitFunctionStatement(this);
     }
 }

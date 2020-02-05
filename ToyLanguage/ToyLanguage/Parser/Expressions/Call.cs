@@ -9,6 +9,6 @@ namespace ToyLanguage.Parser.Expressions
         public Token Parentheses { get; set; }
         public IExpression[] Args { get; set; }
 
-        public T Accept<T>(IExpressionVisitor visitor) => visitor.VisitCallExpression(this);
+        public T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitCallExpression(this);
     }
 }

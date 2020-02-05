@@ -6,14 +6,14 @@ namespace ToyLanguage.Parser.Statements
     internal class Return : IStatement
     {
         public Token Keyword { get; }
-        public Expression Value { get; }
+        public IExpression Value { get; }
 
-        public Return(Token keyword, Expression value)
+        public Return(Token keyword, IExpression value)
         {
             Keyword = keyword;
             Value = value;
         }
 
-        public T Accept<T>(IStatementVisitor visitor) => visitor.VisitReturnStatement(this);
+        public T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitReturnStatement(this);
     }
 }

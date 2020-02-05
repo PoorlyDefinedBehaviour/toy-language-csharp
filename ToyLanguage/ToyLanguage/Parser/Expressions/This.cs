@@ -9,6 +9,6 @@ namespace ToyLanguage.Parser.Expressions
 
         public This(Token name) => Name = name;
 
-        public T Accept<T>(IExpressionVisitor visitor) => visitor.VisitThisExpression(this);
+        public T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitThisExpression(this);
     }
 }

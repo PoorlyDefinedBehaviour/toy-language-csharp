@@ -10,6 +10,6 @@ namespace ToyLanguage.Parser.Statements
 
         public Block(List<IStatement> statements) => Statements = statements;
 
-        public T Accept<T>(IStatementVisitor visitor) => visitor.VisitBlockStatement(this);
+        public T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitBlockStatement(this);
     }
 }

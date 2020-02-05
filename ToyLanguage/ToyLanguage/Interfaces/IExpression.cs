@@ -2,6 +2,6 @@
 {
     internal interface IExpression
     {
-        T Accept<T>(IExpressionVisitor visitor);
+        T Accept<T>(IExpressionVisitor<T> visitor);
     }
 }

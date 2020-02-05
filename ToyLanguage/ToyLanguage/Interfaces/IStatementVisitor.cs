@@ -2,26 +2,26 @@ using ToyLanguage.Parser.Statements;
 
 namespace ToyLanguage.Interfaces
 {
-    internal interface IStatementVisitor
+    internal interface IStatementVisitor<T>
     {
-        dynamic VisitBlockStatement(Block statement);
+        T VisitBlockStatement(Block statement);
 
-        dynamic VisitExpressionStatement(Expression statement);
+        T VisitExpressionStatement(IExpression statement);
 
-        dynamic VisitPrintStatement(Print statement);
+        T VisitPrintStatement(Print statement);
 
-        dynamic VisitLetStatement(Let statement);
+        T VisitLetStatement(Let statement);
 
-        dynamic VisitConstStatement(Const statement);
+        T VisitConstStatement(Const statement);
 
-        dynamic VisitIfStatement(If statement);
+        T VisitIfStatement(If statement);
 
-        dynamic VisitWhileStatement(While statement);
+        T VisitWhileStatement(While statement);
 
-        dynamic VisitFunctionStatement(Function statement);
+        T VisitFunctionStatement(Function statement);
 
-        dynamic VisitReturnStatement(Return statement);
+        T VisitReturnStatement(Return statement);
 
-        dynamic VisitClassStatement(Class statement);
+        T VisitClassStatement(Class statement);
     }
 }

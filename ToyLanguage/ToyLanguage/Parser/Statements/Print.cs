@@ -4,10 +4,10 @@ namespace ToyLanguage.Parser.Statements
 {
     internal class Print : IStatement
     {
-        public Expression Expression { get; }
+        public IExpression Expression { get; }
 
-        public Print(Expression expression) => Expression = expression;
+        public Print(IExpression expression) => Expression = expression;
 
-        public T Accept<T>(IStatementVisitor visitor) => visitor.VisitPrintStatement(this);
+        public T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitPrintStatement(this);
     }
 }

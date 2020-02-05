@@ -11,6 +11,6 @@ namespace ToyLanguage.Parser.Expressions
         public Token Operator { get; set; }
         public IExpression Right { get; set; }
 
-        public T Accept<T>(IExpressionVisitor visitor) => throw new NotImplementedException();
+        public T Accept<T>(IExpressionVisitor<T> visitor) => throw new NotImplementedException();
     }
 }

@@ -21,6 +21,6 @@ namespace ToyLanguage.Parser.Statements
             StaticMethods = staticMethods;
         }
 
-        public T Accept<T>(IStatementVisitor visitor) => visitor.VisitClassStatement(this);
+        public T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitClassStatement(this);
     }
 }

@@ -8,6 +8,6 @@ namespace ToyLanguage.Parser.Expressions
 
         public Grouping(IExpression expression) => Expression = expression;
 
-        public T Accept<T>(IExpressionVisitor visitor) => visitor.VisitGroupingExpression(this);
+        public T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitGroupingExpression(this);
     }
 }

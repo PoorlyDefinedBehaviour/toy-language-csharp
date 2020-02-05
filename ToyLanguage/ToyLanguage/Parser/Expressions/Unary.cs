@@ -14,6 +14,6 @@ namespace ToyLanguage.Parser.Expressions
             Right = right;
         }
 
-        public T Accept<T>(IExpressionVisitor visitor) => visitor.VisitUnaryExpression(this);
+        public T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitUnaryExpression(this);
     }
 }

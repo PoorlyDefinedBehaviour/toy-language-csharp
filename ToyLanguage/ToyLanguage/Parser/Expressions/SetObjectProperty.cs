@@ -16,6 +16,6 @@ namespace ToyLanguage.Parser.Expressions
             Value = value;
         }
 
-        public T Accept<T>(IExpressionVisitor visitor) => visitor.VisitSetObjectPropertyExpression(this);
+        public T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitSetObjectPropertyExpression(this);
     }
 }

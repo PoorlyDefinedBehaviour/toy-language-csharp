@@ -6,15 +6,15 @@ namespace ToyLanguage.Parser.Statements
 {
     internal class While : IStatement
     {
-        public Expression Condition { get; }
+        public IExpression Condition { get; }
         public List<IStatement> Body { get; }
 
-        public While(Expression condition, List<IStatement> body)
+        public While(IExpression condition, List<IStatement> body)
         {
             Condition = condition;
             Body = body;
         }
 
-        public T Accept<T>(IStatementVisitor visitor) => visitor.VisitWhileStatement(this);
+        public T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitWhileStatement(this);
     }
 }

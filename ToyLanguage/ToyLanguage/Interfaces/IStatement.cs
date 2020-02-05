@@ -2,6 +2,6 @@ namespace ToyLanguage.Interfaces
 {
     internal interface IStatement
     {
-        T Accept<T>(IStatementVisitor visitor);
+        T Accept<T>(IStatementVisitor<T> visitor);
     }
 }

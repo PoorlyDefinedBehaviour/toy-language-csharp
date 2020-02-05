@@ -16,6 +16,6 @@ namespace ToyLanguage.Parser.Expressions
             IsSuperClassProperty = isSuperClassProperty;
         }
 
-        public T Accept<T>(IExpressionVisitor visitor) => visitor.VisitAccessObjectPropertyExpression(this);
+        public T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitAccessObjectPropertyExpression(this);
     }
 }
