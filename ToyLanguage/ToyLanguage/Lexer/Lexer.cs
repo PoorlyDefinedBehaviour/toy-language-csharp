@@ -19,11 +19,11 @@ namespace ToyLanguage.Lexer
         {
             this.source = source;
 
-            makeKeywordsDictionary();
-            makeSingleCharacterTokensDictionary();
+            MakeKeywordsDictionary();
+            MakeSingleCharacterTokensDictionary();
         }
 
-        private void makeKeywordsDictionary()
+        private void MakeKeywordsDictionary()
         {
             keywords.Add("and", TokenType.AND);
             keywords.Add("or", TokenType.OR);
@@ -47,7 +47,7 @@ namespace ToyLanguage.Lexer
             keywords.Add("static", TokenType.STATIC);
         }
 
-        private void makeSingleCharacterTokensDictionary()
+        private void MakeSingleCharacterTokensDictionary()
         {
             singleCharacterTokens.Add('(', TokenType.LEFT_PAREN);
             singleCharacterTokens.Add(')', TokenType.RIGHT_PAREN);
@@ -61,148 +61,145 @@ namespace ToyLanguage.Lexer
             singleCharacterTokens.Add('*', TokenType.STATIC);
         }
 
-        private char nextToken() => source[current++];
+        private char NextToken() => source[current++];
 
-        private bool endOfSource() => current >= source.Length;
+        private bool EndOfSource() => current >= source.Length;
 
-        private bool isDigit(char c) => c >= '0' && c <= '9';
+        private bool IsDigit(char c) => c >= '0' && c <= '9';
 
-        private bool isAlpha(char c)
+        private bool IsAlpha(char c)
         {
             return c >= 'a' && c <= 'z' ||
                    c >= 'A' && c <= 'Z' ||
                    c == '_';
         }
 
-        private char peek(int offset = 0) => endOfSource() ? '\0' : source[current + offset];
+        private char Peek(int offset = 0) => EndOfSource() ? '\0' : source[current + offset];
 
-        private bool match(char expected)
+        private bool Match(char expected)
         {
-            if (endOfSource() || source[current] != expected)
+            if (EndOfSource() || source[current] != expected)
                 return false;
 
             ++current;
             return true;
         }
 
-        private void addToken(TokenType type, object literal = null)
-        {
-            string expression = source.Substring(start, current);
-            tokens.Add(new Token(type, expression, literal, line));
-        }
+        private void AddToken(TokenType type, object literal = null) =>
+            tokens.Add(new Token(type, source.Substring(start, current), literal, line));
 
-        private void stringLiteral()
+        private void StringLiteral()
         {
-            while (peek() != '"' && !endOfSource())
+            while (!Peek().Equals('"') && !EndOfSource())
             {
-                if (peek() == '\n')
+                if (Peek() == '\n')
                     ++line;
-                nextToken();
+                NextToken();
             }
 
-            if (endOfSource())
+            if (EndOfSource())
             {
                 Console.WriteLine("Unterminated string on line {0}", line);
                 return;
             }
 
-            nextToken();
+            NextToken();
 
             string expression = source.Substring(start, current);
             string value = source.Substring(start + 1, current - 1);
             tokens.Add(new Token(TokenType.STRING, expression, value, line));
         }
 
-        private void numberLiteral()
+        private void NumberLiteral()
         {
-            while (isDigit(peek()))
-                nextToken();
+            while (IsDigit(Peek()))
+                NextToken();
 
-            if (peek() == '.' && isDigit(peek(1)))
+            if (Peek().Equals('.') && IsDigit(Peek(1)))
             {
-                nextToken();
+                NextToken();
 
-                while (isDigit(peek()))
-                    nextToken();
+                while (IsDigit(Peek()))
+                    NextToken();
             }
 
             string value = source.Substring(start, current);
-            addToken(TokenType.NUMBER, value);
+            AddToken(TokenType.NUMBER, value);
         }
 
-        private void identifier()
+        private void Identifier()
         {
-            while (isAlpha(peek()))
-                nextToken();
+            while (IsAlpha(Peek()))
+                NextToken();
 
             string keyword = source.Substring(start, current);
             TokenType type = keywords.GetValueOrDefault(keyword, TokenType.IDENTIFIER);
-            addToken(type);
+            AddToken(type);
         }
 
-        private void scanToken(char c)
+        private void ScanToken(char c)
         {
             if (singleCharacterTokens.ContainsKey(c))
             {
-                addToken(singleCharacterTokens.GetValueOrDefault(c));
+                AddToken(singleCharacterTokens.GetValueOrDefault(c));
                 return;
             }
 
             switch (c)
             {
                 case '!':
-                    if (match('!'))
-                        addToken(TokenType.DOUBLE_BANG);
-                    else if (match('='))
-                        addToken(TokenType.BANG_EQUAL);
+                    if (Match('!'))
+                        AddToken(TokenType.DOUBLE_BANG);
+                    else if (Match('='))
+                        AddToken(TokenType.BANG_EQUAL);
                     else
-                        addToken(TokenType.BANG);
+                        AddToken(TokenType.BANG);
                     break;
 
                 case '=':
-                    addToken(match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
+                    AddToken(Match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
                     break;
 
                 case '<':
-                    addToken(match('=') ? TokenType.LESS_EQUAL : TokenType.LESS);
+                    AddToken(Match('=') ? TokenType.LESS_EQUAL : TokenType.LESS);
                     break;
 
                 case '>':
-                    addToken(match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
+                    AddToken(Match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
                     break;
 
                 case '?':
-                    if (match('?'))
-                        addToken(TokenType.NULL_COALESCING);
+                    if (Match('?'))
+                        AddToken(TokenType.NULL_COALESCING);
                     else
                         Console.WriteLine("Unexpected character <{0}> on line <{1}>", c, line);
 
                     break;
 
                 case '/':
-                    if (match('/'))
-                        while (peek() != '\n' && !endOfSource())
-                            nextToken();
-                    else if (match('*'))
+                    if (Match('/'))
+                        while (Peek() != '\n' && !EndOfSource())
+                            NextToken();
+                    else if (Match('*'))
                     {
                         int blockCommentStart = line;
 
                         while (
-                          peek() != '*' &&
-                          peek(1) != '/' &&
-                          !endOfSource()
+                          Peek() != '*' &&
+                          Peek(1) != '/' &&
+                          !EndOfSource()
                         )
-                            if (nextToken() == '\n')
+                            if (NextToken() == '\n')
                                 ++line;
 
-                        if (endOfSource())
+                        if (EndOfSource())
                             Console.WriteLine("Unterminated block comment starting at line {0}", blockCommentStart);
 
-                        nextToken(); // consume *
-                        nextToken(); // consume /
+                        NextToken(); // consume *
+                        NextToken(); // consume /
                     }
                     else
-                        addToken(TokenType.SLASH);
+                        AddToken(TokenType.SLASH);
                     break;
 
                 case ' ':
@@ -215,14 +212,14 @@ namespace ToyLanguage.Lexer
                     break;
 
                 case '"':
-                    stringLiteral();
+                    StringLiteral();
                     break;
 
                 default:
-                    if (isDigit(c))
-                        numberLiteral();
-                    else if (isAlpha(c))
-                        identifier();
+                    if (IsDigit(c))
+                        NumberLiteral();
+                    else if (IsAlpha(c))
+                        Identifier();
                     else
                         Console.WriteLine("Unexpected character <{0}> on line <{1}>", c, line);
                     break;
@@ -231,13 +228,13 @@ namespace ToyLanguage.Lexer
 
         public List<Token> Tokenize()
         {
-            while (!endOfSource())
+            while (!EndOfSource())
             {
                 start = current;
-                scanToken(nextToken());
+                ScanToken(NextToken());
             }
 
-            tokens.Add(new Token(TokenType.END_OF_FILE, "", null, line));
+            tokens.Add(new Token(TokenType.END_OF_FILE, string.Empty, null, line));
             return tokens;
         }
     }
