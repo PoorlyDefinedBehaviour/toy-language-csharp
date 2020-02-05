@@ -1,28 +1,26 @@
-using Lexer;
-
 using System.Collections.Generic;
 
-namespace Parser.Statements
+using ToyLanguage.Interfaces;
+using ToyLanguage.Lexer;
+using ToyLanguage.Parser.Expressions;
+
+namespace ToyLanguage.Parser.Statements
 {
     internal class Class : IStatement
     {
-        public Token name { get; }
-        public Variable? superclass { get; }
-        public List<Function> methods { get; }
-        public List<Function> staticMethods { get; }
+        public Token Name { get; }
+        public Variable Superclass { get; }
+        public List<Function> Methods { get; }
+        public List<Function> StaticMethods { get; }
 
-        public Class(
-           Token name,
-           Variable? superclass,
-           List<Function> methods,
-           List<Function> staticMethods
-        )
+        public Class(Token name, Variable superclass, List<Function> methods, List<Function> staticMethods)
         {
-            this.name = name;
-            this.superclass = superclass;
-            this.methods = methods;
-            this.staticMethods = staticMethods;
+            Name = name;
+            Superclass = superclass;
+            Methods = methods;
+            StaticMethods = staticMethods;
         }
 
-        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitClassStatement(this);
+        public T Accept<T>(IStatementVisitor visitor) => visitor.VisitClassStatement(this);
     }
+}

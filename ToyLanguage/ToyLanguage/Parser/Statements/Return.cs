@@ -1,6 +1,7 @@
-using Lexer;
+using ToyLanguage.Interfaces;
+using ToyLanguage.Lexer;
 
-namespace Parser.Statements
+namespace ToyLanguage.Parser.Statements
 {
     internal class Return : IStatement
     {
@@ -13,6 +14,6 @@ namespace Parser.Statements
             Value = value;
         }
 
-        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitReturnStatement(this);
+        public T Accept<T>(IStatementVisitor visitor) => visitor.VisitReturnStatement(this);
     }
 }

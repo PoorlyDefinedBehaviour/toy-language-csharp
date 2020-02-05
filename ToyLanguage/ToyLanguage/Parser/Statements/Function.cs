@@ -1,8 +1,9 @@
-using Lexer;
-
 using System.Collections.Generic;
 
-namespace Parser.Statements
+using ToyLanguage.Interfaces;
+using ToyLanguage.Lexer;
+
+namespace ToyLanguage.Parser.Statements
 {
     internal class Function : IStatement
     {
@@ -17,6 +18,6 @@ namespace Parser.Statements
             Body = body;
         }
 
-        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitFunctionStatement(this);
+        public T Accept<T>(IStatementVisitor visitor) => visitor.VisitFunctionStatement(this);
     }
 }

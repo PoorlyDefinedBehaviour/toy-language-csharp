@@ -1,6 +1,6 @@
-﻿using Lexer;
+﻿using System;
 
-using System;
+using ToyLanguage.Lexer;
 
 internal class Program
 {

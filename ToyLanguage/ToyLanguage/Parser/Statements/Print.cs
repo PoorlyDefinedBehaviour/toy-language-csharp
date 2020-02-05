@@ -1,4 +1,6 @@
-namespace Parser.Statements
+using ToyLanguage.Interfaces;
+
+namespace ToyLanguage.Parser.Statements
 {
     internal class Print : IStatement
     {
@@ -6,6 +8,6 @@ namespace Parser.Statements
 
         public Print(Expression expression) => Expression = expression;
 
-        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitPrintStatement(this);
+        public T Accept<T>(IStatementVisitor visitor) => visitor.VisitPrintStatement(this);
     }
 }

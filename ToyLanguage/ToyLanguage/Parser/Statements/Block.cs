@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 
-namespace Parser.Statements
+using ToyLanguage.Interfaces;
+
+namespace ToyLanguage.Parser.Statements
 {
     internal class Block : IStatement
     {
-        public readonly List<IStatement> statements;
+        public List<IStatement> Statements { get; }
 
-        public Block(List<IStatement> statements) => this.statements = statements;
+        public Block(List<IStatement> statements) => Statements = statements;
 
-        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitBlockStatement(this);
+        public T Accept<T>(IStatementVisitor visitor) => visitor.VisitBlockStatement(this);
     }
 }

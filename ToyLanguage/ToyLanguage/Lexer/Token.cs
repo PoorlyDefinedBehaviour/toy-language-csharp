@@ -1,4 +1,4 @@
-namespace Lexer
+namespace ToyLanguage.Lexer
 {
     internal enum TokenType
     {

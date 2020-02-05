@@ -1,8 +1,8 @@
-using Parser.Statements;
-
 using System.Collections.Generic;
 
-namespace Parser
+using ToyLanguage.Interfaces;
+
+namespace ToyLanguage.Parser
 {
     internal struct ParserResult
     {

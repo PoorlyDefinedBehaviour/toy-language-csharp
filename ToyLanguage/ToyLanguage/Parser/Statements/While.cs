@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 
-namespace Parser.Statements
+using ToyLanguage.Interfaces;
+
+namespace ToyLanguage.Parser.Statements
 {
     internal class While : IStatement
     {
@@ -13,6 +15,6 @@ namespace Parser.Statements
             Body = body;
         }
 
-        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitWhileStatement(this);
+        public T Accept<T>(IStatementVisitor visitor) => visitor.VisitWhileStatement(this);
     }
 }

@@ -1,6 +1,7 @@
-using Lexer;
+using ToyLanguage.Interfaces;
+using ToyLanguage.Lexer;
 
-namespace Parser.Statements
+namespace ToyLanguage.Parser.Statements
 {
     internal class Let : IStatement
     {
@@ -13,6 +14,6 @@ namespace Parser.Statements
             Initializer = initializer;
         }
 
-        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitLetStatement(this);
+        public T Accept<T>(IStatementVisitor visitor) => visitor.VisitLetStatement(this);
     }
 }

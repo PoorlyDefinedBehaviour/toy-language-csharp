@@ -1,4 +1,6 @@
-namespace Parser.Statements
+using ToyLanguage.Parser.Statements;
+
+namespace ToyLanguage.Interfaces
 {
     internal interface IStatementVisitor
     {

@@ -1,11 +1,9 @@
-namespace Parser.Statements
+﻿using ToyLanguage.Interfaces;
+
+namespace ToyLanguage.Parser.Statements
 {
     internal class Expression : IStatement
     {
-        public Expression CurrentExpression { get; }
-
-        public Expression(Expression expression) => CurrentExpression = expression;
-
-        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitExpressionStatement(this);
+        public T Accept<T>(IStatementVisitor visitor) => visitor.VisitExpressionStatement(this);
     }
 }

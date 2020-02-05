@@ -1,7 +1,8 @@
+
 using System;
 using System.Collections.Generic;
 
-namespace Lexer
+namespace ToyLanguage.Lexer
 {
     internal class Tokenizer
     {
@@ -69,8 +70,8 @@ namespace Lexer
 
         private bool isAlpha(char c)
         {
-            return (c >= 'a' && c <= 'z') ||
-                   (c >= 'A' && c <= 'Z') ||
+            return c >= 'a' && c <= 'z' ||
+                   c >= 'A' && c <= 'Z' ||
                    c == '_';
         }
 
@@ -79,9 +80,7 @@ namespace Lexer
         private bool match(char expected)
         {
             if (endOfSource() || source[current] != expected)
-            {
                 return false;
-            }
 
             ++current;
             return true;
@@ -98,9 +97,7 @@ namespace Lexer
             while (peek() != '"' && !endOfSource())
             {
                 if (peek() == '\n')
-                {
                     ++line;
-                }
                 nextToken();
             }
 
@@ -120,18 +117,14 @@ namespace Lexer
         private void numberLiteral()
         {
             while (isDigit(peek()))
-            {
                 nextToken();
-            }
 
             if (peek() == '.' && isDigit(peek(1)))
             {
                 nextToken();
 
                 while (isDigit(peek()))
-                {
                     nextToken();
-                }
             }
 
             string value = source.Substring(start, current);
@@ -141,9 +134,7 @@ namespace Lexer
         private void identifier()
         {
             while (isAlpha(peek()))
-            {
                 nextToken();
-            }
 
             string keyword = source.Substring(start, current);
             TokenType type = keywords.GetValueOrDefault(keyword, TokenType.IDENTIFIER);
@@ -162,17 +153,11 @@ namespace Lexer
             {
                 case '!':
                     if (match('!'))
-                    {
                         addToken(TokenType.DOUBLE_BANG);
-                    }
                     else if (match('='))
-                    {
                         addToken(TokenType.BANG_EQUAL);
-                    }
                     else
-                    {
                         addToken(TokenType.BANG);
-                    }
                     break;
 
                 case '=':
@@ -189,24 +174,16 @@ namespace Lexer
 
                 case '?':
                     if (match('?'))
-                    {
                         addToken(TokenType.NULL_COALESCING);
-                    }
                     else
-                    {
                         Console.WriteLine("Unexpected character <{0}> on line <{1}>", c, line);
-                    }
 
                     break;
 
                 case '/':
                     if (match('/'))
-                    {
                         while (peek() != '\n' && !endOfSource())
-                        {
                             nextToken();
-                        }
-                    }
                     else if (match('*'))
                     {
                         int blockCommentStart = line;
@@ -216,25 +193,17 @@ namespace Lexer
                           peek(1) != '/' &&
                           !endOfSource()
                         )
-                        {
                             if (nextToken() == '\n')
-                            {
                                 ++line;
-                            }
-                        }
 
                         if (endOfSource())
-                        {
                             Console.WriteLine("Unterminated block comment starting at line {0}", blockCommentStart);
-                        }
 
                         nextToken(); // consume *
                         nextToken(); // consume /
                     }
                     else
-                    {
                         addToken(TokenType.SLASH);
-                    }
                     break;
 
                 case ' ':
@@ -252,17 +221,11 @@ namespace Lexer
 
                 default:
                     if (isDigit(c))
-                    {
                         numberLiteral();
-                    }
                     else if (isAlpha(c))
-                    {
                         identifier();
-                    }
                     else
-                    {
                         Console.WriteLine("Unexpected character <{0}> on line <{1}>", c, line);
-                    }
                     break;
             }
         }
