@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interpreter", "Interpreter\Interpreter.csproj", "{60100E5D-0A18-4A3F-8F19-8AECC3E0DA84}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToyLanguage", "ToyLanguage\ToyLanguage.csproj", "{60100E5D-0A18-4A3F-8F19-8AECC3E0DA84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

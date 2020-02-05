@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>Interpreter</RootNamespace>
+    <RootNamespace>ToyLanguage</RootNamespace>
     <AssemblyName>Interpreter</AssemblyName>
   </PropertyGroup>
 
