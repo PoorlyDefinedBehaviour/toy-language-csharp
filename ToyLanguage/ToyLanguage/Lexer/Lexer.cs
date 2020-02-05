@@ -3,242 +3,243 @@ using System.Collections.Generic;
 
 namespace ToyLanguage.Lexer
 {
-    internal class Tokenizer
+  internal class Tokenizer
+  {
+    private Dictionary<string, TokenType> Keywords = new Dictionary<string, TokenType>();
+    private Dictionary<char, TokenType> SingleCharacterTokens { get; } = new Dictionary<char, TokenType>();
+
+    private List<Token> Tokens { get; } = new List<Token>();
+
+    private int Start = 0;
+    private int Current = 0;
+    private int Line = 0;
+
+    private readonly string Source;
+
+    public Tokenizer(string source)
     {
-        private Dictionary<string, TokenType> keywords = new Dictionary<string, TokenType>();
-        private readonly Dictionary<char, TokenType> singleCharacterTokens = new Dictionary<char, TokenType>();
+      Source = source;
 
-        private readonly List<Token> tokens = new List<Token>();
-        private int start = 0;
-        private int current = 0;
-        private int line = 0;
-
-        private readonly string source;
-
-        public Tokenizer(string source)
-        {
-            this.source = source;
-
-            makeKeywordsDictionary();
-            makeSingleCharacterTokensDictionary();
-        }
-
-        private void makeKeywordsDictionary()
-        {
-            keywords.Add("and", TokenType.AND);
-            keywords.Add("or", TokenType.OR);
-            keywords.Add("mod", TokenType.MOD);
-            keywords.Add("class", TokenType.CLASS);
-            keywords.Add("else", TokenType.ELSE);
-            keywords.Add("false", TokenType.FALSE);
-            keywords.Add("for", TokenType.FOR);
-            keywords.Add("function", TokenType.FUNCTION);
-            keywords.Add("if", TokenType.IF);
-            keywords.Add("null", TokenType.NULL);
-            keywords.Add("print", TokenType.PRINT);
-            keywords.Add("return", TokenType.RETURN);
-            keywords.Add("super", TokenType.SUPER);
-            keywords.Add("this", TokenType.THIS);
-            keywords.Add("true", TokenType.TRUE);
-            keywords.Add("let", TokenType.LET);
-            keywords.Add("const", TokenType.CONST);
-            keywords.Add("while", TokenType.WHILE);
-            keywords.Add("extends", TokenType.CLASS_EXTENDS);
-            keywords.Add("static", TokenType.STATIC);
-        }
-
-        private void makeSingleCharacterTokensDictionary()
-        {
-            singleCharacterTokens.Add('(', TokenType.LEFT_PAREN);
-            singleCharacterTokens.Add(')', TokenType.RIGHT_PAREN);
-            singleCharacterTokens.Add('{', TokenType.LEFT_BRACE);
-            singleCharacterTokens.Add('}', TokenType.RIGHT_BRACE);
-            singleCharacterTokens.Add(',', TokenType.COMMA);
-            singleCharacterTokens.Add(';', TokenType.SEMI_COLON);
-            singleCharacterTokens.Add('.', TokenType.DOT);
-            singleCharacterTokens.Add('-', TokenType.MINUS);
-            singleCharacterTokens.Add('+', TokenType.PLUS);
-            singleCharacterTokens.Add('*', TokenType.STATIC);
-        }
-
-        private char nextToken() => source[current++];
-
-        private bool endOfSource() => current >= source.Length;
-
-        private bool isDigit(char c) => c >= '0' && c <= '9';
-
-        private bool isAlpha(char c)
-        {
-            return c >= 'a' && c <= 'z' ||
-                   c >= 'A' && c <= 'Z' ||
-                   c == '_';
-        }
-
-        private char peek(int offset = 0) => endOfSource() ? '\0' : source[current + offset];
-
-        private bool match(char expected)
-        {
-            if (endOfSource() || source[current] != expected)
-                return false;
-
-            ++current;
-            return true;
-        }
-
-        private void addToken(TokenType type, object literal = null)
-        {
-            string expression = source.Substring(start, current);
-            tokens.Add(new Token(type, expression, literal, line));
-        }
-
-        private void stringLiteral()
-        {
-            while (peek() != '"' && !endOfSource())
-            {
-                if (peek() == '\n')
-                    ++line;
-                nextToken();
-            }
-
-            if (endOfSource())
-            {
-                Console.WriteLine("Unterminated string on line {0}", line);
-                return;
-            }
-
-            nextToken();
-
-            string expression = source.Substring(start, current);
-            string value = source.Substring(start + 1, current - 1);
-            tokens.Add(new Token(TokenType.STRING, expression, value, line));
-        }
-
-        private void numberLiteral()
-        {
-            while (isDigit(peek()))
-                nextToken();
-
-            if (peek() == '.' && isDigit(peek(1)))
-            {
-                nextToken();
-
-                while (isDigit(peek()))
-                    nextToken();
-            }
-
-            string value = source.Substring(start, current);
-            addToken(TokenType.NUMBER, value);
-        }
-
-        private void identifier()
-        {
-            while (isAlpha(peek()))
-                nextToken();
-
-            string keyword = source.Substring(start, current);
-            TokenType type = keywords.GetValueOrDefault(keyword, TokenType.IDENTIFIER);
-            addToken(type);
-        }
-
-        private void scanToken(char c)
-        {
-            if (singleCharacterTokens.ContainsKey(c))
-            {
-                addToken(singleCharacterTokens.GetValueOrDefault(c));
-                return;
-            }
-
-            switch (c)
-            {
-                case '!':
-                    if (match('!'))
-                        addToken(TokenType.DOUBLE_BANG);
-                    else if (match('='))
-                        addToken(TokenType.BANG_EQUAL);
-                    else
-                        addToken(TokenType.BANG);
-                    break;
-
-                case '=':
-                    addToken(match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
-                    break;
-
-                case '<':
-                    addToken(match('=') ? TokenType.LESS_EQUAL : TokenType.LESS);
-                    break;
-
-                case '>':
-                    addToken(match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
-                    break;
-
-                case '?':
-                    if (match('?'))
-                        addToken(TokenType.NULL_COALESCING);
-                    else
-                        Console.WriteLine("Unexpected character <{0}> on line <{1}>", c, line);
-
-                    break;
-
-                case '/':
-                    if (match('/'))
-                        while (peek() != '\n' && !endOfSource())
-                            nextToken();
-                    else if (match('*'))
-                    {
-                        int blockCommentStart = line;
-
-                        while (
-                          peek() != '*' &&
-                          peek(1) != '/' &&
-                          !endOfSource()
-                        )
-                            if (nextToken() == '\n')
-                                ++line;
-
-                        if (endOfSource())
-                            Console.WriteLine("Unterminated block comment starting at line {0}", blockCommentStart);
-
-                        nextToken(); // consume *
-                        nextToken(); // consume /
-                    }
-                    else
-                        addToken(TokenType.SLASH);
-                    break;
-
-                case ' ':
-                case '\r':
-                case '\t':
-                    break;
-
-                case '\n':
-                    ++line;
-                    break;
-
-                case '"':
-                    stringLiteral();
-                    break;
-
-                default:
-                    if (isDigit(c))
-                        numberLiteral();
-                    else if (isAlpha(c))
-                        identifier();
-                    else
-                        Console.WriteLine("Unexpected character <{0}> on line <{1}>", c, line);
-                    break;
-            }
-        }
-
-        public List<Token> Tokenize()
-        {
-            while (!endOfSource())
-            {
-                start = current;
-                scanToken(nextToken());
-            }
-
-            tokens.Add(new Token(TokenType.END_OF_FILE, "", null, line));
-            return tokens;
-        }
+      MakeKeywordsDictionary();
+      MakeSingleCharacterTokensDictionary();
     }
+
+    private void MakeKeywordsDictionary()
+    {
+      Keywords.Add("and", TokenType.AND);
+      Keywords.Add("or", TokenType.OR);
+      Keywords.Add("mod", TokenType.MOD);
+      Keywords.Add("class", TokenType.CLASS);
+      Keywords.Add("else", TokenType.ELSE);
+      Keywords.Add("false", TokenType.FALSE);
+      Keywords.Add("for", TokenType.FOR);
+      Keywords.Add("function", TokenType.FUNCTION);
+      Keywords.Add("if", TokenType.IF);
+      Keywords.Add("null", TokenType.NULL);
+      Keywords.Add("print", TokenType.PRINT);
+      Keywords.Add("return", TokenType.RETURN);
+      Keywords.Add("super", TokenType.SUPER);
+      Keywords.Add("this", TokenType.THIS);
+      Keywords.Add("true", TokenType.TRUE);
+      Keywords.Add("let", TokenType.LET);
+      Keywords.Add("const", TokenType.CONST);
+      Keywords.Add("while", TokenType.WHILE);
+      Keywords.Add("extends", TokenType.CLASS_EXTENDS);
+      Keywords.Add("static", TokenType.STATIC);
+    }
+
+    private void MakeSingleCharacterTokensDictionary()
+    {
+      SingleCharacterTokens.Add('(', TokenType.LEFT_PAREN);
+      SingleCharacterTokens.Add(')', TokenType.RIGHT_PAREN);
+      SingleCharacterTokens.Add('{', TokenType.LEFT_BRACE);
+      SingleCharacterTokens.Add('}', TokenType.RIGHT_BRACE);
+      SingleCharacterTokens.Add(',', TokenType.COMMA);
+      SingleCharacterTokens.Add(';', TokenType.SEMI_COLON);
+      SingleCharacterTokens.Add('.', TokenType.DOT);
+      SingleCharacterTokens.Add('-', TokenType.MINUS);
+      SingleCharacterTokens.Add('+', TokenType.PLUS);
+      SingleCharacterTokens.Add('*', TokenType.STATIC);
+    }
+
+    private char NextToken() => Source[Current++];
+
+    private bool EndOfSource() => Current >= Source.Length;
+
+    private bool IsDigit(char c) => c >= '0' && c <= '9';
+
+    private bool IsAlpha(char c)
+    {
+      return c >= 'a' && c <= 'z' ||
+             c >= 'A' && c <= 'Z' ||
+             c == '_';
+    }
+
+    private char Peek(int offset = 0) => EndOfSource() ? '\0' : Source[Current + offset];
+
+    private bool Match(char expected)
+    {
+      if (EndOfSource() || Source[Current] != expected)
+        return false;
+
+      ++Current;
+      return true;
+    }
+
+    private void AddToken(TokenType type, object literal = null)
+    {
+      string expression = Source.Substring(Start, Current);
+      Tokens.Add(new Token(type, expression, literal, Line));
+    }
+
+    private void StringLiteral()
+    {
+      while (Peek() != '"' && !EndOfSource())
+      {
+        if (Peek() == '\n')
+          ++Line;
+        NextToken();
+      }
+
+      if (EndOfSource())
+      {
+        Console.WriteLine("Unterminated string on Line {0}", Line);
+        return;
+      }
+
+      NextToken();
+
+      string expression = Source.Substring(Start, Current);
+      string value = Source.Substring(Start + 1, Current - 1);
+      Tokens.Add(new Token(TokenType.STRING, expression, value, Line));
+    }
+
+    private void numberLiteral()
+    {
+      while (IsDigit(Peek()))
+        NextToken();
+
+      if (Peek() == '.' && IsDigit(Peek(1)))
+      {
+        NextToken();
+
+        while (IsDigit(Peek()))
+          NextToken();
+      }
+
+      string value = Source.Substring(Start, Current);
+      AddToken(TokenType.NUMBER, value);
+    }
+
+    private void Identifier()
+    {
+      while (IsAlpha(Peek()))
+        NextToken();
+
+      string keyword = Source.Substring(Start, Current);
+      TokenType type = Keywords.GetValueOrDefault(keyword, TokenType.IDENTIFIER);
+      AddToken(type);
+    }
+
+    private void ScanToken(char c)
+    {
+      if (SingleCharacterTokens.ContainsKey(c))
+      {
+        AddToken(SingleCharacterTokens.GetValueOrDefault(c));
+        return;
+      }
+
+      switch (c)
+      {
+        case '!':
+          if (Match('!'))
+            AddToken(TokenType.DOUBLE_BANG);
+          else if (Match('='))
+            AddToken(TokenType.BANG_EQUAL);
+          else
+            AddToken(TokenType.BANG);
+          break;
+
+        case '=':
+          AddToken(Match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
+          break;
+
+        case '<':
+          AddToken(Match('=') ? TokenType.LESS_EQUAL : TokenType.LESS);
+          break;
+
+        case '>':
+          AddToken(Match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
+          break;
+
+        case '?':
+          if (Match('?'))
+            AddToken(TokenType.NULL_COALESCING);
+          else
+            Console.WriteLine("Unexpected character <{0}> on Line <{1}>", c, Line);
+
+          break;
+
+        case '/':
+          if (Match('/'))
+            while (Peek() != '\n' && !EndOfSource())
+              NextToken();
+          else if (Match('*'))
+          {
+            int blockCommentStart = Line;
+
+            while (
+              Peek() != '*' &&
+              Peek(1) != '/' &&
+              !EndOfSource()
+            )
+              if (NextToken() == '\n')
+                ++Line;
+
+            if (EndOfSource())
+              Console.WriteLine("Unterminated block comment Starting at Line {0}", blockCommentStart);
+
+            NextToken(); // consume *
+            NextToken(); // consume /
+          }
+          else
+            AddToken(TokenType.SLASH);
+          break;
+
+        case ' ':
+        case '\r':
+        case '\t':
+          break;
+
+        case '\n':
+          ++Line;
+          break;
+
+        case '"':
+          StringLiteral();
+          break;
+
+        default:
+          if (IsDigit(c))
+            numberLiteral();
+          else if (IsAlpha(c))
+            Identifier();
+          else
+            Console.WriteLine("Unexpected character <{0}> on Line <{1}>", c, Line);
+          break;
+      }
+    }
+
+    public List<Token> Tokenize()
+    {
+      while (!EndOfSource())
+      {
+        Start = Current;
+        ScanToken(NextToken());
+      }
+
+      Tokens.Add(new Token(TokenType.END_OF_FILE, "", null, Line));
+      return Tokens;
+    }
+  }
 }

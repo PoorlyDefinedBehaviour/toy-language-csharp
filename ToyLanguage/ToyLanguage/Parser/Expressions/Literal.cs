@@ -4,14 +4,15 @@ using ToyLanguage.Interfaces;
 
 namespace ToyLanguage.Parser.Expressions
 {
-    internal class Literal : IExpression
+  internal class Literal : IExpression
+  {
+    public object Value { get; }
+
+    public Literal(object value)
     {
-        [Obsolete]
-        public object Value { get; }
-
-        [Obsolete]
-        public Literal(object value) => Value = value;
-
-        public T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitLiteralExpression(this);
+      Value = value;
     }
+
+    public T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitLiteralExpression(this);
+  }
 }
