@@ -1,28 +1,22 @@
-using System.Collections.Generic;
 using Lexer;
+
+using System.Collections.Generic;
 
 namespace Parser.Statements
 {
-  class Function : Statement
-  {
-    public readonly Token name;
-    public readonly List<Token> parameters;
-    public readonly List<Statement> body;
-
-    public Function(
-      Token name,
-      List<Token> parameters,
-      List<Statement> body
-      )
+    internal class Function : IStatement
     {
-      this.name = name;
-      this.parameters = parameters;
-      this.body = body;
-    }
+        public Token Name { get; }
+        public List<Token> Parameters { get; }
+        public List<IStatement> Body { get; }
 
-    public dynamic accept(StatementVisitor visitor)
-    {
-      return visitor.visitFunctionStatement(this);
+        public Function(Token name, List<Token> parameters, List<IStatement> body)
+        {
+            Name = name;
+            Parameters = parameters;
+            Body = body;
+        }
+
+        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitFunctionStatement(this);
     }
-  }
 }

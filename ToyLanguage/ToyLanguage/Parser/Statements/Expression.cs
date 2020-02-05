@@ -1,16 +1,11 @@
 namespace Parser.Statements
 {
-  class Expression : Statement
-  {
-    public readonly Expression expression;
-
-    public Expression(Expression expression)
+    internal class Expression : IStatement
     {
-      this.expression = expression;
-    }
+        public Expression CurrentExpression { get; }
 
-    public dynamic accept(StatementVisitor visitor)
-    {
-      return visitor.visitExpressionStatement(this);
+        public Expression(Expression expression) => CurrentExpression = expression;
+
+        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitExpressionStatement(this);
     }
-  }
+}

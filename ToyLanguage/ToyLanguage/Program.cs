@@ -1,12 +1,12 @@
-﻿using System;
-using Lexer;
+﻿using Lexer;
 
-class Program
+using System;
+
+internal class Program
 {
-  static void Main(string[] args)
-  {
-    var lexer = new Tokenizer("let a = 10");
-    Console.WriteLine("hello world");
-  }
+    private static void Main(string[] args)
+    {
+        var lexer = new Tokenizer("let a = 10");
+        Console.WriteLine("hello world");
+    }
 }
-

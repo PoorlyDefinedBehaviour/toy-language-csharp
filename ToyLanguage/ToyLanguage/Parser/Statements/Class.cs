@@ -1,30 +1,28 @@
-using System.Collections.Generic;
 using Lexer;
+
+using System.Collections.Generic;
 
 namespace Parser.Statements
 {
-  class Class : Statement
-  {
-    public readonly Token name;
-    public readonly Variable? superclass;
-    public readonly List<Function> methods;
-    public readonly List<Function> staticMethods;
-
-    public Class(
-       Token name,
-       Variable? superclass,
-       List<Function> methods,
-       List<Function> staticMethods
-    )
+    internal class Class : IStatement
     {
-      this.name = name;
-      this.superclass = superclass;
-      this.methods = methods;
-      this.staticMethods = staticMethods;
-    }
+        public Token name { get; }
+        public Variable? superclass { get; }
+        public List<Function> methods { get; }
+        public List<Function> staticMethods { get; }
 
-    public dynamic accept(StatementVisitor visitor)
-    {
-      return visitor.visitClassStatement(this);
+        public Class(
+           Token name,
+           Variable? superclass,
+           List<Function> methods,
+           List<Function> staticMethods
+        )
+        {
+            this.name = name;
+            this.superclass = superclass;
+            this.methods = methods;
+            this.staticMethods = staticMethods;
+        }
+
+        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitClassStatement(this);
     }
-  }

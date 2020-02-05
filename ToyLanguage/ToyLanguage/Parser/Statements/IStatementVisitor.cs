@@ -1,16 +1,25 @@
 namespace Parser.Statements
 {
-  interface StatementVisitor
-  {
-    dynamic visitBlockStatement(Block statement);
-    dynamic visitExpressionStatement(Expression statement);
-    dynamic visitPrintStatement(Print statement);
-    dynamic visitLetStatement(Let statement);
-    dynamic visitConstStatement(Const statement);
-    dynamic visitIfStatement(If statement);
-    dynamic visitWhileStatement(While statement);
-    dynamic visitFunctionStatement(Function statement);
-    dynamic visitReturnStatement(Return statement);
-    dynamic visitClassStatement(Class statement);
-  }
+    internal interface IStatementVisitor
+    {
+        dynamic VisitBlockStatement(Block statement);
+
+        dynamic VisitExpressionStatement(Expression statement);
+
+        dynamic VisitPrintStatement(Print statement);
+
+        dynamic VisitLetStatement(Let statement);
+
+        dynamic VisitConstStatement(Const statement);
+
+        dynamic VisitIfStatement(If statement);
+
+        dynamic VisitWhileStatement(While statement);
+
+        dynamic VisitFunctionStatement(Function statement);
+
+        dynamic VisitReturnStatement(Return statement);
+
+        dynamic VisitClassStatement(Class statement);
+    }
 }

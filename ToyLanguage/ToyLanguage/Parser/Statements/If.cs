@@ -1,23 +1,18 @@
 namespace Parser.Statements
 {
-  class If : Statement
-  {
-    public readonly Expression condition;
-    public readonly Statement thenBranch;
-    public readonly Statement? elseBranch;
-
-    public If(Expression condition,
-              Statement thenBranch,
-              Statement? elseBranch)
+    internal class If : IStatement
     {
-      this.condition = condition;
-      this.thenBranch = thenBranch;
-      this.elseBranch = elseBranch;
-    }
+        public Expression Condition { get; }
+        public IStatement ThenBranch { get; }
+        public IStatement? ElseBranch { get; }
 
-    public dynamic accept(StatementVisitor visitor)
-    {
-      return visitor.visitIfStatement(this);
+        public If(Expression condition, IStatement thenBranch, IStatement elseBranch)
+        {
+            Condition = condition;
+            ThenBranch = thenBranch;
+            ElseBranch = elseBranch;
+        }
+
+        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitIfStatement(this);
     }
-  }
 }

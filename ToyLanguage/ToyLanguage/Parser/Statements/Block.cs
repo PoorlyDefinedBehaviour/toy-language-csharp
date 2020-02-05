@@ -2,12 +2,12 @@ using System.Collections.Generic;
 
 namespace Parser.Statements
 {
-    internal class Block : Statement
+    internal class Block : IStatement
     {
-        public readonly List<Statement> _statements;
+        public readonly List<IStatement> statements;
 
-        public Block(List<Statement> statements) => _statements = statements;
+        public Block(List<IStatement> statements) => this.statements = statements;
 
-        public dynamic accept(StatementVisitor visitor) => visitor.visitBlockStatement(this);
+        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitBlockStatement(this);
     }
 }

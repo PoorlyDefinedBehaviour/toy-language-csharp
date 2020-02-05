@@ -1,16 +1,11 @@
 namespace Parser.Statements
 {
-  class Print : Statement
-  {
-    public readonly Expression expression;
-
-    public Print(Expression expression)
+    internal class Print : IStatement
     {
-      this.expression = expression;
-    }
+        public Expression Expression { get; }
 
-    public dynamic accept(StatementVisitor visitor)
-    {
-      return visitor.visitPrintStatement(this);
+        public Print(Expression expression) => Expression = expression;
+
+        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitPrintStatement(this);
     }
-  }
+}

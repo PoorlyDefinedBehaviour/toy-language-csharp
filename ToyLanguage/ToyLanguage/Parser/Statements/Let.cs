@@ -2,19 +2,17 @@ using Lexer;
 
 namespace Parser.Statements
 {
-  class Let : Statement
-  {
-    public readonly Token name;
-    public readonly Expression? initializer;
-
-    public Let(Token name, Expression? initializer)
+    internal class Let : IStatement
     {
-      this.name = name;
-      this.initializer = initializer;
-    }
+        public Token Name { get; }
+        public Expression Initializer { get; }
 
-    public dynamic accept(StatementVisitor visitor)
-    {
-      return visitor.visitLetStatement(this);
+        public Let(Token name, Expression initializer)
+        {
+            Name = name;
+            Initializer = initializer;
+        }
+
+        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitLetStatement(this);
     }
-  }
+}

@@ -2,20 +2,17 @@ using Lexer;
 
 namespace Parser.Statements
 {
-  class Return : Statement
-  {
-    public readonly Token keyword;
-    public readonly Expression? value;
-
-    public Return(Token keyword, Expression? value)
+    internal class Return : IStatement
     {
-      this.keyword = keyword;
-      this.value = value;
-    }
+        public Token Keyword { get; }
+        public Expression Value { get; }
 
-    public dynamic accept(StatementVisitor visitor)
-    {
-      return visitor.visitReturnStatement(this);
+        public Return(Token keyword, Expression value)
+        {
+            Keyword = keyword;
+            Value = value;
+        }
+
+        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitReturnStatement(this);
     }
-  }
 }

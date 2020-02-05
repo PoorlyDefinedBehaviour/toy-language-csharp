@@ -2,20 +2,17 @@ using System.Collections.Generic;
 
 namespace Parser.Statements
 {
-  class While : Statement
-  {
-    public readonly Expression condition;
-    public readonly List<Statement> body;
-
-    public While(Expression condition, List<Statement> body)
+    internal class While : IStatement
     {
-      this.condition = condition;
-      this.body = body;
-    }
+        public Expression Condition { get; }
+        public List<IStatement> Body { get; }
 
-    public dynamic accept(StatementVisitor visitor)
-    {
-      return visitor.visitWhileStatement(this);
+        public While(Expression condition, List<IStatement> body)
+        {
+            Condition = condition;
+            Body = body;
+        }
+
+        public dynamic Accept(IStatementVisitor visitor) => visitor.VisitWhileStatement(this);
     }
-  }
 }

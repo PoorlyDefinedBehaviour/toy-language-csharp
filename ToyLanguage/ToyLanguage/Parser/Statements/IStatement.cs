@@ -1,7 +1,7 @@
 namespace Parser.Statements
 {
-  interface Statement
-  {
-    dynamic accept(StatementVisitor visitor);
-  }
+    internal interface IStatement
+    {
+        dynamic Accept(IStatementVisitor visitor);
+    }
 }
