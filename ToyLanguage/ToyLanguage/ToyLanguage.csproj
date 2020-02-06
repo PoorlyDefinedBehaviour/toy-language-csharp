@@ -7,9 +7,4 @@
     <AssemblyName>Interpreter</AssemblyName>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Interpreter\Enrironment\" />
-    <Folder Include="Interpreter\builtins\" />
-  </ItemGroup>
-
 </Project>
