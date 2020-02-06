@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using ToyLanguage.Interpreter.builtins.Callable;
 using ToyLanguage.Interpreter.Interfaces;
 
 namespace ToyLanguage.Interpreter.builtins.Class
@@ -17,7 +18,6 @@ namespace ToyLanguage.Interpreter.builtins.Class
 
         public BuiltinClass()
         {
-
         }
 
         public override string ToString() => name;

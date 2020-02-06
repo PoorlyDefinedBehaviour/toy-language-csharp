@@ -1,5 +1,7 @@
 ﻿using System;
+
 using ToyLanguage.Interpreter.builtins.Class;
+using ToyLanguage.Interpreter.Exceptions;
 using ToyLanguage.Interpreter.Interfaces;
 using ToyLanguage.Parser.Statements;
 
@@ -10,7 +12,7 @@ namespace ToyLanguage.Interpreter.builtins.Callable
         private readonly Environment.Environment closure;
         public Function Declaration { get; }
 
-        public BuiltinFunction(Environment.Environment closure, Function declaration)
+        public BuiltinFunction(Function declaration, Environment.Environment closure)
         {
             this.closure = closure;
             Declaration = declaration;
@@ -18,18 +20,36 @@ namespace ToyLanguage.Interpreter.builtins.Callable
 
         public BuiltinFunction Bind(BuiltinClass instance, BuiltinClass superClass)
         {
-            var environment = new Environment.Environment()
-              .setParentEnvironment(closure)
-              .define("this", instance)
-              .define("super", superClass);
+            Environment.Environment environment = new Environment.Environment()
+              .SetParentEnvironment(closure)
+              .Define("this", instance)
+              .Define("super", superClass);
 
             return new BuiltinFunction(Declaration, environment);
         }
 
-        public int Arity() => throw new NotImplementedException();
+        public int Arity() => Declaration.Parameters.Count;
 
-        public T Call<T>(Interpreter interpreter, object[] args) => throw new NotImplementedException();
+        public string Name() => Declaration.Name.Lexeme;
 
-        public string Name() => throw new NotImplementedException();
+        [Obsolete]
+        public T Call<T>(Interpreter interpreter, object[] args)
+        {
+            Environment.Environment environment = new Environment.Environment().SetParentEnvironment(closure);
+
+            for (int i = 0; i < Declaration.Parameters.Count; ++i)
+                environment.Define(Declaration.Parameters[i].Lexeme, args[i]);
+
+            try
+            {
+                //interpreter.executeBlock(Declaration.Body, environment);
+            }
+            catch (ReturnException<T> e)
+            {
+                return e.Value;
+            }
+
+            return default;
+        }
     }
 }
