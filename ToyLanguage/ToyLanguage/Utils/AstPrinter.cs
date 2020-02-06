@@ -1,13 +1,11 @@
-﻿using System;
-using ToyLanguage.Interfaces;
+﻿using ToyLanguage.Interfaces;
 using ToyLanguage.Parser.Expressions;
 
 namespace ToyLanguage.Utils
 {
     internal class AstPrinter : IExpressionVisitor<string>
     {
-        /*        public print = (expression: Expr.Expression): string => expression.accept(this);
-
+        /*
           private parenthesize = (name: string, ...expressions: any[]) =>
           {
               (${name} ${expressions.reduce((result, expr) =>
@@ -28,8 +26,6 @@ namespace ToyLanguage.Utils
 
         public string VisitGroupingExpression(Grouping expression) => throw new System.NotImplementedException();
 
-        [Obsolete]
-        //rever o tipo do Value, nao sei se é object.
         public string VisitLiteralExpression(Literal expression) =>
             expression.Value == null ? "nil" : expression.Value.ToString();
 
