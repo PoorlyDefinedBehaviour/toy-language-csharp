@@ -7,7 +7,7 @@ using ToyLanguage.Parser.Statements;
 
 namespace ToyLanguage.Interpreter.builtins.Callable
 {
-    internal class BuiltinFunction : ICallable
+    internal class BuiltinFunction : ICallable<BuiltinFunction>
     {
         private readonly Environment.Environment closure;
         public Function Declaration { get; }
@@ -33,7 +33,7 @@ namespace ToyLanguage.Interpreter.builtins.Callable
         public string Name() => Declaration.Name.Lexeme;
 
         [Obsolete]
-        public T Call<T>(Interpreter interpreter, object[] args)
+        public BuiltinFunction Call(Interpreter interpreter, object[] args)
         {
             Environment.Environment environment = new Environment.Environment().SetParentEnvironment(closure);
 
@@ -44,7 +44,7 @@ namespace ToyLanguage.Interpreter.builtins.Callable
             {
                 //interpreter.executeBlock(Declaration.Body, environment);
             }
-            catch (ReturnException<T> e)
+            catch (ReturnException<BuiltinFunction> e)
             {
                 return e.Value;
             }

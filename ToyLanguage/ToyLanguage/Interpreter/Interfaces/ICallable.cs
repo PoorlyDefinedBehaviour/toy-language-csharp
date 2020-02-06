@@ -4,10 +4,10 @@ using System.Text;
 
 namespace ToyLanguage.Interpreter.Interfaces
 {
-    interface ICallable
+    interface ICallable<T>
     {
         int Arity();
         string Name();
-        T Call<T>(Interpreter interpreter, object[] args);
+        T Call(Interpreter interpreter, object[] args);
     }
 }
