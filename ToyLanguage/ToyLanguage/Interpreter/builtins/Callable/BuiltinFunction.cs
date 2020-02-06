@@ -28,7 +28,7 @@ namespace ToyLanguage.Interpreter.builtins.Callable
             return new BuiltinFunction(Declaration, environment);
         }
 
-        public int Arity() => Declaration.Parameters.Count;
+        public double Arity() => Declaration.Parameters.Count;
 
         public string Name() => Declaration.Name.Lexeme;
 

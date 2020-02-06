@@ -30,7 +30,7 @@ namespace ToyLanguage.Interpreter.builtins.Class
 
         public override string ToString() => name;
 
-        public int Arity()
+        public double Arity()
         {
             BuiltinFunction constructor = GetMethod("constructor");
             return constructor != null ? constructor.Arity() : 0;
