@@ -1,11 +1,13 @@
-﻿namespace ToyLanguage.Interpreter.Interfaces
+﻿using System.Collections.Generic;
+
+namespace ToyLanguage.Interpreter.Interfaces
 {
-    internal interface ICallable<T>
-    {
-        double Arity();
+  internal interface ICallable
+  {
+    double Arity();
 
-        string Name();
+    string Name();
 
-        T Call(Interpreter interpreter, object[] args);
-    }
+    object Call(Interpreter interpreter, List<object> args);
+  }
 }

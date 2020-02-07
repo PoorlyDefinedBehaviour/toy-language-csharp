@@ -2,12 +2,13 @@
 
 namespace ToyLanguage.Interpreter.Exceptions
 {
-    internal class ReturnException<T> : Exception
-    {
-        public T Value { get; set; }
+  internal class ReturnException : Exception
+  {
+    public Object Value { get; set; }
 
-        public ReturnException() : base()
-        {
-        }
+    public ReturnException(Object value) : base()
+    {
+      Value = value;
     }
+  }
 }

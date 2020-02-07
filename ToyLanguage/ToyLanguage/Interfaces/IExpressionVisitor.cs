@@ -2,30 +2,26 @@
 
 namespace ToyLanguage.Interfaces
 {
-    internal interface IExpressionVisitor<T>
-    {
-        T VisitBinaryExpression(Binary expression);
+  internal interface IExpressionVisitor<T>
+  {
+    T VisitBinaryExpression(Binary expression);
 
-        T VisitUnaryExpression(Unary expression);
+    T VisitUnaryExpression(Unary expression);
 
-        T VisitGroupingExpression(Grouping expression);
+    T VisitGroupingExpression(Grouping expression);
 
-        T VisitLiteralExpression(Literal expression);
+    T VisitLiteralExpression(Literal expression);
 
-        T VisitVariableExpression(Variable expression);
+    T VisitVariableExpression(Variable expression);
 
-        T VisitAssignExpression(Assign expression);
+    T VisitAssignExpression(Assign expression);
 
-        T VisitLogicalExpression(Logical expression);
+    T VisitLogicalExpression(Logical expression);
 
-        T VisitCallExpression(Call expression);
+    T VisitCallExpression(Call expression);
 
-        T VisitAccessObjectPropertyExpression(AccessObjectProperty expression);
+    T VisitAccessObjectPropertyExpression(AccessObjectProperty expression);
 
-        T VisitSetObjectPropertyExpression(SetObjectProperty expression);
-
-        T VisitThisExpression(This expression);
-
-        T VisitSuperExpression(Super expression);
-    }
+    T VisitSetObjectPropertyExpression(SetObjectProperty expression);
+  }
 }
