@@ -48,7 +48,7 @@ namespace ToyLanguage.Interpreter.builtins.Callable
         return e.Value;
       }
 
-      return default;
+      return null;
     }
   }
 }
